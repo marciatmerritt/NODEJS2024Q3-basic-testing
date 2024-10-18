@@ -8,7 +8,7 @@ import {
 
 describe('BankAccount', () => {
   let account: BankAccount;
-  let account2 = new BankAccount(200);
+  const account2 = new BankAccount(200);
 
   beforeEach(() => {
     account = getBankAccount(250);
