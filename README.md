@@ -222,11 +222,6 @@ Error handling tests ensure that the code properly throws or rejects errors unde
 
 ---
 
-4. **Class Testing**:  
-   Test a class representing a bank account, which handles various operations, some of which are asynchronous and might throw errors.
-
-   
-
 ## Testing Classes
 
 In this section, we test a class representing a bank account, which handles various operations, some of which are asynchronous and might throw errors. Tests are written in `src/04-test-class/index.test.ts`.
@@ -249,15 +244,113 @@ test('should create a new bank account with initial balance', () => {
 - [Unit Testing for Classes](https://www.toptal.com/nodejs/node-js-unit-testing-tutorial)
 
 ---
-5. **Partial Mocking**:  
-   Utilize Jest to partially mock modules.
 
-   Tests are written in `src/05-partial-mocking/index.test.ts`.
+## Partial Mocking
 
-6. **Mocking Node.js API**:  
-   Test the proper usage of the Node.js API by mocking common functions like `fs`, `setTimeout`, and `setInterval` to avoid interacting with the actual file system or relying on real-time delays.
+In this exercise, you're aiming to mock some functions (mockOne, mockTwo, mockThree) from the ./index module, but leave others (unmockedFunction) unchanged so they behave as usual. Tests are written in `src/05-partial-mocking/index.test.ts`.
 
-   Tests are written in `src/06-mocking-node-api/index.test.ts`.
+### What is Partial Mocking?
+
+Partial mocking is the practice of mocking only certain methods in a module or class while leaving others intact. This approach allows you to isolate specific functions for testing without affecting the functionality of unrelated parts of the module. It is especially useful when you want to mock only a subset of behaviors while retaining the original implementation for the rest.
+
+## Example Setup
+
+Below is an example of how to perform partial mocking in Jest using `jest.spyOn` to selectively mock methods in a module:
+
+```typescript
+jest.spyOn(myModule, 'functionToMock').mockImplementation(() => 'mocked result');
+```
+
+### Test Setup
+
+We use `beforeEach` and `afterEach` to manage console logging during tests to ensure that console logs are suppressed during the test and restored after each test is completed. For example:
+
+```typescript
+beforeEach(() => {
+  consoleSpy = jest.spyOn(console, 'log').mockImplementation(() => {});
+});
+```
+```typescript
+afterEach(() => {
+  consoleSpy.mockRestore();
+});
+```
+
+### Key Jest Functions
+- **`jest.mock(moduleName, factory)`**: Replaces the entire module with a mock implementation. However, we can combine it with `jest.requireActual` to only mock certain functions, leaving others intact.
+- **`jest.spyOn(object, methodName)`**: Creates a mock for a specific method on an object or module. This is helpful for partial mocking.
+- **`mockImplementation(fn)`**: Defines a custom implementation for a mocked function.
+
+## Learn More
+
+- [Jest - Mock Functions](https://jestjs.io/docs/mock-function-api)
+- [How to Use Partial Mocks in Jest](https://javascript.plainenglish.io/using-jests-partial-mock-features-bc0b2f1b6a2e)
+
+---
+
+## Mocking Node.js API
+
+In this section, we test code that interacts with Node.js APIs like `fs`, `setTimeout`, or `setInterval`. By mocking these APIs, we can avoid real file system changes or relying on real-time behavior during tests. Additionally, we mock the `fs` module's `readFile` function using Jest. This helps us test file-reading logic without relying on the actual filesystem. The tests are written in `src/06-mocking-node-api/index.test.ts`.
+
+### What is Node.js API Mocking?
+
+**Node.js API Mocking** is a testing technique used to simulate the behavior of native Node.js APIs such as file system operations (`fs`), timers (`setTimeout`, `setInterval`), HTTP modules (`http`, `https`), and more. The goal of mocking these APIs is to avoid real interactions with external dependencies or hardware (like file systems or network calls) during tests, allowing you to isolate and test the behavior of your code in a controlled environment.
+
+By mocking the Node.js APIs, you can:
+- **Prevent unintended side effects**: Avoid modifying files or interacting with actual external resources during testing.
+- **Speed up tests**: Eliminate real delays from timers or I/O operations, making the tests faster and more predictable.
+- **Simulate different conditions**: Control the output of APIs, including error scenarios, without depending on the real environment.
+
+### Key Benefits of Node.js API Mocking:
+- **Control over behavior**: You can simulate successful or failed API interactions without depending on the actual system.
+- **Efficiency**: You can reduce test run time by eliminating real I/O or network interactions.
+- **Test reliability**: Tests won't fail because of external factors like unavailable files or network errors.
+
+### Example of Mocking Node.js `fs` API
+
+Below is a sample test for mocking the `fs` module in a Node.js project:
+
+```typescript
+import { readFile } from 'fs/promises';
+import { processFile } from './fileProcessor';  // Example function that processes file content
+
+jest.mock('fs/promises');
+
+describe('processFile', () => {
+  const fileContent = 'Mock file content';
+
+  beforeEach(() => {
+    // Mock the resolved value of readFile
+    (readFile as jest.Mock).mockResolvedValue(fileContent);
+  });
+
+  test('should process file content correctly', async () => {
+    const result = await processFile('test-file.txt');
+    expect(result).toBe('Processed: Mock file content');
+  });
+
+  afterEach(() => {
+    jest.clearAllMocks();  // Clear mocks after each test
+  });
+});
+```
+
+### Explanation:
+- **`jest.mock('fs/promises')`**: Mocks the `fs/promises` module so the real file system is not accessed.
+- **`(readFile as jest.Mock).mockResolvedValue(fileContent)`**: Ensures that whenever `readFile` is called during the test, it resolves with the mocked file content (`fileContent`).
+- **`jest.clearAllMocks()`**: Resets the mocked functions after each test, ensuring that the tests are independent.
+
+### Key Jest Functions for Mocking:
+- **`jest.mock(moduleName)`**: Automatically mocks all exports of a module.
+- **`mockResolvedValue(value)`**: Mocks a function to return a resolved promise with the given value.
+- **`jest.clearAllMocks()`**: Clears all mock calls and implementations.
+
+### Learn More:
+- [Jest - Mocking Node.js APIs](https://jestjs.io/docs/manual-mocks)
+- [Node.js fs module](https://nodejs.org/api/fs.html)
+- [Mocking Node.js APIs](https://www.digitalocean.com/community/tutorials/js-mock-node-api)
+
+---
 
 7. **Mocking Library API**:  
    Test the functionality of a function that utilizes a third-party library, e.g., `axios` or `lodash`.
