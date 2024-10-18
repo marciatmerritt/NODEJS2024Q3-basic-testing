@@ -1,106 +1,195 @@
-# Basic testing
+# Basic Testing with Node.js and Jest
 
-⚠️ DO NOT SUBMIT PULL REQUESTS TO THIS REPO ⚠️
+This repository contains unit tests for a Node.js project, focusing on different testing techniques and tools such as Jest. The purpose of the assignment is to demonstrate proficiency in writing tests for various scenarios like simple unit tests, table-driven tests, error handling, class testing, partial mocking, Node.js API mocking, and more.
 
----
+## Project Overview
 
-### Prerequisites
-1. Install [Node.js](https://nodejs.org/en/download/)   
-2. Fork this repository: https://github.com/AlreadyBored/basic-testing
-3. Clone your newly created repo locally: https://github.com/<%your_github_username%>/basic-testing/  
-4. Go to folder `basic-testing`  
-5. To install all dependencies use [`npm install`](https://docs.npmjs.com/cli/install)  
-6. Run **test scripts** in command line.
-7. You will see the number of skipped, passing and failing tests.
+The goal of this assignment is to write comprehensive unit tests for code provided in the repository using **Jest**. This includes testing functions, handling errors, mocking APIs, and creating snapshot tests.
 
----
+The project is divided into several sections, each focusing on a different testing strategy:
+- Simple Tests
+- Table-Driven Tests
+- Error Handling & Asynchronous Functions
+- Testing Classes
+- Partial Mocking
+- Mocking Node.js API
+- Mocking Library API
+- Snapshot Testing
 
-### Test scripts
+## Prerequisites
 
+To run and test the code, ensure you have the following installed on your machine:
+- **Node.js v20.x.x LTS** or higher
+- **npm** (comes with Node.js)
+
+## Installation
+
+Follow these steps to set up the project locally:
+
+1. **Fork** this repository:  
+   Go to https://github.com/marciatmerritt/NODEJS2024Q3-basic-testing.git and click on "Fork" to create a personal copy.
+
+2. **Clone** your forked repository:  
+   Replace `<your_github_username>` with your actual GitHub username.
+   ```bash
+   git clone https://github.com/<your_github_username>/basic-testing.git
+   ```
+
+3. **Navigate to the project directory**:
+   ```bash
+   cd basic-testing
+   ```
+
+4. **Install dependencies**:
+   Use the following command to install all required npm packages:
+   ```bash
+   npm install
+   ```
+
+## Running the Tests
+
+This project includes a number of test scripts to verify the code. The tests are written using the **Jest** testing framework.
+
+You can run the tests by using the following npm commands:
+
+### Run Unit Tests
 ```bash
-# run unit tests
-$ npm run test
-
-# with logging
-$ npm run test:verbose
+npm run test
 ```
 
----
+### Run Unit Tests with Verbose Logging
+```bash
+npm run test:verbose
+```
 
-#### Notes
-1. We recommend you to use Node.js of version 20.x.x LTS. If you use any of features, that does not supported by Node.js 20, there may be problems with task submit.
-2. Please, be sure that each of your tests is limited to 30 sec.
+After running the tests, you will see the number of passing, failing, and skipped tests in the terminal.
 
----
+## Testing Sections
 
-## General task description
-Your task is to write unit tests for code, provided in file `index.ts`. 
+## Simple Tests
 
----
+In this section, we write basic unit tests for the `simpleCalculator` function. Unit testing involves verifying that individual units of code (like functions or classes) work as expected. Tests are written in `src/01-simple-tests/index.test.ts`.
 
-### **Simple tests**
+### What is Unit Testing?
 
-Write unit tests for the `simpleCalculator` function, which performs basic mathematical operations - addition, subtraction, division, multiplication, and exponentiation. Your task is to verify that the operations are executed correctly and that the function returns `null` for invalid input.
+Unit testing is a software testing method where individual pieces of code, such as functions or methods, are tested in isolation from the rest of the application. It helps ensure that each function performs as expected under various input conditions.
 
-Write your tests in `src/01-simple-tests/index.test.ts`.
+### Example of a Unit Test in Jest
 
----
+```typescript
+test('adds 5 + 3 to equal 8', () => {
+  expect(simpleCalculator(5, 3, '+')).toBe(8);
+});
+```
 
-### **Table tests**
+This test checks if adding 5 and 3 using the `simpleCalculator` function returns the expected value, 8.
 
-Your task is to rewrite the tests written in the previous task using the table-driven testing approach, utilizing the appropriate Jest API.
-
-Write your tests in `src/02-table-tests/index.test.ts`.
-
----
-
-
-### **Error handling & async**
-
-Your task is to test functions that work asynchronously/throw/reject exceptions..
-
-Write your tests in `src/03-error-handling-async/index.test.ts`.
+### Learn More:
+- [Jest - Getting Started with Unit Testing](https://jestjs.io/docs/getting-started)
+- [What is Unit Testing?](https://martinfowler.com/bliki/UnitTest.html) - By Martin Fowler
 
 ---
 
-### **Testing class**
+## Table Tests
 
-Your task is to test a class representing a bank account that implements corresponding operations. Please note that some methods of the class invoke others, some operations result in errors, and the implementation is asynchronous and involves the native JS API. These aspects should be taken into account when writing the tests.
+In this section we rewrite the tests using **table-driven tests** to rewrite the tests for the `simpleCalculator` function. Table-driven testing organizes multiple test cases into a "table" or array of test data, allowing you to loop over the inputs and expected outputs instead of writing separate test cases for each. This helps in avoiding repetitive code and makes it easier to maintain and extend test cases. Tests are written in `src/02-table-tests/index.test.ts`.
 
-Write your tests in `src/04-test-class/index.test.ts`.
+### What is Table-Driven Testing?
+
+Table-driven testing allows you to test multiple scenarios in a more organized and efficient way. Instead of writing separate test cases for each input/output pair, you define a "table" of test cases (usually an array of objects in code) and loop over them to execute the same logic.
+
+### Example of Table-Driven Test with Jest
+
+Here’s a simple example of a table-driven test in Jest:
+
+```typescript
+describe('simpleCalculator', () => {
+  const testCases = [
+    { a: 5, b: 3, action: '+', expected: 8 },
+    { a: 5, b: 3, action: '-', expected: 2 },
+    { a: 5, b: 3, action: '*', expected: 15 },
+    { a: 9, b: 3, action: '/', expected: 3 },
+    { a: 2, b: 3, action: '^', expected: 8 },
+    { a: 5, b: 3, action: 'invalid', expected: null },
+  ];
+
+  test.each(testCases)('$a $action $b should return $expected', ({ a, b, action, expected }) => {
+    const result = simpleCalculator(a, b, action);
+    expect(result).toBe(expected);
+  });
+});
+```
+
+In this example, `test.each` allows us to iterate over the `testCases` array, running the same test logic for each case.
+
+### How to Learn More
+
+For more information on table-driven testing in Jest, you can refer to the following resources:
+- [Jest - Test Each](https://jestjs.io/docs/api#testeachtablename-fn-timeout): Official documentation for `test.each` in Jest.
+- [Table-Driven Tests in JavaScript](https://dmitripavlutin.com/table-driven-tests-javascript/): A blog post explaining the concept of table-driven testing in JavaScript.
 
 ---
 
-### **Partial mocking**
+## Error Handling & Async
 
-Your task is to utilize the Jest API to partially mock the contents of a module.
+In this section, we write tests for functions that handle errors and asynchronous operations. These tests verify that the functions handle failures correctly and that promises resolve or reject as expected. Tests are written in `src/03-error-handling-async/index.test.ts`.
 
-Write your tests in `src/05-partial-mocking/index.test.ts`.
+### What is Error Handling & Asynchronous Testing?
 
----
+Error handling tests ensure that the code properly handles exceptional conditions by throwing or returning errors. Asynchronous testing verifies that functions using promises, `async`/`await`, or callback patterns work correctly and resolve to the expected values.
 
-### **Mocking Node.js API**
+### Example in Jest:
 
-Your task is to test the proper usage of the Node.js API based on commonly used APIs such as the `fs` module, as well as `setTimeout` and `setInterval`. Remember that the tests should not interact with the actual file system and should not rely on real-time!
+```typescript
+test('should throw an error for invalid input', () => {
+  expect(() => someFunction('invalid')).toThrow('Invalid input');
+});
 
-Write your tests in `src/06-mocking-node-api/index.test.ts`.
+test('should resolve correctly with async/await', async () => {
+  const result = await asyncFunction('valid');
+  expect(result).toBe('Expected Result');
+});
+```
 
----
-
-### **Mocking library API**
-
-Your task is to test that function that utilize library APIs is working correctly (with commonly used libraries such as `axios` and `lodash` as examples).
-
-Write your tests in `src/07-mocking-lib-api/index.test.ts`.
-
----
-
-### **Snapshot testing**
-
-Your task is to use snapshot testing with Jest and compare it to regular comparison testing.
-
-Write your tests in `src/08-snapshot-testing/index.test.ts`.
+### Learn More:
+- [Jest - Testing Asynchronous Code](https://jestjs.io/docs/asynchronous)
+- [Error Handling in JavaScript](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Control_flow_and_error_handling)
 
 ---
 
-© [AlreadyBored](https://github.com/AlreadyBored)
+4. **Class Testing**:  
+   Test a class representing a bank account, which handles various operations, some of which are asynchronous and might throw errors.
+
+   Tests are written in `src/04-test-class/index.test.ts`.
+
+5. **Partial Mocking**:  
+   Utilize Jest to partially mock modules.
+
+   Tests are written in `src/05-partial-mocking/index.test.ts`.
+
+6. **Mocking Node.js API**:  
+   Test the proper usage of the Node.js API by mocking common functions like `fs`, `setTimeout`, and `setInterval` to avoid interacting with the actual file system or relying on real-time delays.
+
+   Tests are written in `src/06-mocking-node-api/index.test.ts`.
+
+7. **Mocking Library API**:  
+   Test the functionality of a function that utilizes a third-party library, e.g., `axios` or `lodash`.
+
+   Tests are written in `src/07-mocking-lib-api/index.test.ts`.
+
+8. **Snapshot Testing**:  
+   Use Jest's snapshot testing to ensure the consistency of output over time.
+
+   Tests are written in `src/08-snapshot-testing/index.test.ts`.
+
+## Notes
+
+- Ensure that your tests complete execution within **30 seconds**.
+- The project uses **Jest** as the testing framework. Refer to the [Jest documentation](https://jestjs.io/docs/getting-started) for more information on how to use Jest.
+
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+---
