@@ -130,26 +130,91 @@ For more information on table-driven testing in Jest, you can refer to the follo
 
 ---
 
+
+
 ## Error Handling & Async
 
-In this section, we write tests for functions that handle errors and asynchronous operations. These tests verify that the functions handle failures correctly and that promises resolve or reject as expected. Tests are written in `src/03-error-handling-async/index.test.ts`.
+In this section, we write tests for functions that handle errors and asynchronous operations. These tests verify that the functions correctly handle exceptions and resolve or reject as expected. Tests are written in `src/03-error-handling-async/index.test.ts`.
 
 ### What is Error Handling & Asynchronous Testing?
 
-Error handling tests ensure that the code properly handles exceptional conditions by throwing or returning errors. Asynchronous testing verifies that functions using promises, `async`/`await`, or callback patterns work correctly and resolve to the expected values.
+Error handling tests ensure that the code properly throws or rejects errors under exceptional conditions. Asynchronous testing verifies that functions using promises, `async`/`await`, or callback patterns work correctly, ensuring that they resolve or reject as expected.
 
-### Example in Jest:
+### Real Test Cases:
 
-```typescript
-test('should throw an error for invalid input', () => {
-  expect(() => someFunction('invalid')).toThrow('Invalid input');
-});
+1. **`resolveValue` Function:**
+   This test ensures that the `resolveValue` function returns the provided value after resolving a promise.
 
-test('should resolve correctly with async/await', async () => {
-  const result = await asyncFunction('valid');
-  expect(result).toBe('Expected Result');
-});
-```
+   ```typescript
+   describe('resolveValue', () => {
+     test('should resolve provided value', async () => {
+       const value = 'test';
+       const resolvedValue = await resolveValue(value);
+       expect(resolvedValue).toBe(value);
+     });
+   });
+   ```
+
+   - **Explanation:** The test calls `resolveValue` with the string `'test'`, and it expects the resolved value to be the same as the input.
+
+2. **`throwError` Function:**
+   These tests verify that the `throwError` function throws the appropriate error based on the input provided (or the default message if no input is provided).
+
+   ```typescript
+   describe('throwError', () => {
+     test('should throw error with provided message', () => {
+       expect(() => throwError('Custom message')).toThrow('Custom message');
+     });
+
+     test('should throw error with default message if message is not provided', () => {
+       expect(() => throwError()).toThrow('Oops!');
+     });
+   });
+   ```
+
+   - **Explanation:**  
+     - The first test checks that when a custom message (`'Custom message'`) is passed, `throwError` throws an error with that message.
+     - The second test checks that if no message is provided, `throwError` throws an error with the default message `'Oops!'`.
+
+3. **`throwCustomError` Function:**
+   This test verifies that the `throwCustomError` function throws a custom error of the type `MyAwesomeError` with a specific message.
+
+   ```typescript
+   describe('throwCustomError', () => {
+     test('should throw custom error', () => {
+       expect(() => throwCustomError()).toThrowError(MyAwesomeError);
+       expect(() => throwCustomError()).toThrowError(
+         'This is my awesome custom error!',
+       );
+     });
+   });
+   ```
+
+   - **Explanation:**  
+     - The test first checks that `throwCustomError` throws an error of type `MyAwesomeError`.
+     - Then it verifies that the error message is `'This is my awesome custom error!'`.
+
+4. **`rejectCustomError` Function:**
+   This test ensures that the `rejectCustomError` function rejects the custom error `MyAwesomeError` with the correct message.
+
+   ```typescript
+   describe('rejectCustomError', () => {
+     test('should reject custom error', async () => {
+       expect.assertions(2);
+       try {
+         await rejectCustomError();
+       } catch (error) {
+         expect(error).toBeInstanceOf(MyAwesomeError);
+         const myError = error as MyAwesomeError;
+         expect(myError.message).toBe('This is my awesome custom error!');
+       }
+     });
+   });
+   ```
+
+   - **Explanation:**  
+     - This test uses `expect.assertions(2)` to ensure that both assertions inside the `catch` block are executed.
+     - It checks that the rejected error is an instance of `MyAwesomeError` and that the error message is `'This is my awesome custom error!'`.
 
 ### Learn More:
 - [Jest - Testing Asynchronous Code](https://jestjs.io/docs/asynchronous)
@@ -160,8 +225,30 @@ test('should resolve correctly with async/await', async () => {
 4. **Class Testing**:  
    Test a class representing a bank account, which handles various operations, some of which are asynchronous and might throw errors.
 
-   Tests are written in `src/04-test-class/index.test.ts`.
+   
 
+## Testing Classes
+
+In this section, we test a class representing a bank account, which handles various operations, some of which are asynchronous and might throw errors. Tests are written in `src/04-test-class/index.test.ts`.
+
+### What is Class Testing?
+
+Class testing ensures that the methods in a class work together as expected. In object-oriented programming, testing classes means testing individual methods as well as their interactions with each other.
+
+### Example in Jest:
+
+```typescript
+test('should create a new bank account with initial balance', () => {
+  const account = new BankAccount(100);
+  expect(account.getBalance()).toBe(100);
+});
+```
+
+### Learn More:
+- [Jest - Testing Classes](https://jestjs.io/docs/es6-class-mocks)
+- [Unit Testing for Classes](https://www.toptal.com/nodejs/node-js-unit-testing-tutorial)
+
+---
 5. **Partial Mocking**:  
    Utilize Jest to partially mock modules.
 
@@ -181,6 +268,8 @@ test('should resolve correctly with async/await', async () => {
    Use Jest's snapshot testing to ensure the consistency of output over time.
 
    Tests are written in `src/08-snapshot-testing/index.test.ts`.
+
+
 
 ## Notes
 
