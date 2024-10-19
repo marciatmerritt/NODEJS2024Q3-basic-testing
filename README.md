@@ -30,7 +30,6 @@ To run and test the code, ensure you have the following installed on your machin
 
 The project uses **Jest** as the testing framework. Refer to the [Jest documentation](https://jestjs.io/docs/getting-started) for more information on how to use Jest.
 
-
 ## Installation
 
 Follow these steps to set up the project locally:
@@ -597,7 +596,6 @@ In this example, we'll show how to use Jest's snapshot testing with a function t
 - [React Snapshot Testing](https://reactjs.org/docs/test-renderer.html#snapshot-testing)
 
 ---
-
 
 ## Authors
 
