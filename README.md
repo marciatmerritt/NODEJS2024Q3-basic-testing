@@ -19,17 +19,8 @@ The project is divided into several sections, each focusing on a different testi
 ## Prerequisites
 
 To run and test the code, ensure you have the following installed on your machine:
-
-[![Node JS][Node.JS Badge]][NodeJS-url]
-[![NPM][npm]][NPM-url]
-![TypeScript](https://img.shields.io/badge/typescript-%23007ACC.svg?style=for-the-badge&logo=typescript&logoColor=white)
-![JavaScript](https://img.shields.io/badge/javascript-%23323330.svg?style=for-the-badge&logo=javascript&logoColor=%23F7DF1E)
-[![jest tested][jest tested]][Jest-url]
-
 - **Node.js v20.x.x LTS** or higher
-
-The project uses **Jest** as the testing framework. Refer to the [Jest documentation](https://jestjs.io/docs/getting-started) for more information on how to use Jest.
-
+- **npm** (comes with Node.js)
 
 ## Installation
 
@@ -71,7 +62,7 @@ npm run test
 npm run test:verbose
 ```
 
-After running the tests, you will see the number of passing, failing, and skipped tests in the terminal. All tests should complete execution within **30 seconds**.
+After running the tests, you will see the number of passing, failing, and skipped tests in the terminal.
 
 ## Testing Sections
 
@@ -361,268 +352,26 @@ describe('processFile', () => {
 
 ---
 
-## Mocking Library API
+7. **Mocking Library API**:  
+   Test the functionality of a function that utilizes a third-party library, e.g., `axios` or `lodash`.
 
-In this section, we test code that interacts with third-party libraries like `axios` or `lodash`. By mocking these libraries, we ensure that our code behaves correctly without needing to make actual HTTP requests or relying on external functionality. Tests are written in `src/07-mocking-lib-api/index.test.ts`.
+   Tests are written in `src/07-mocking-lib-api/index.test.ts`.
 
-### What is Library API Mocking?
+8. **Snapshot Testing**:  
+   Use Jest's snapshot testing to ensure the consistency of output over time.
 
-**Mocking Library API** refers to the practice of simulating or "mocking" the behavior of external libraries, services, or APIs in your tests. This allows developers to write tests that do not depend on external resources like databases, web services, or third-party APIs. Instead of calling real endpoints or libraries, the tests use mock versions that simulate the behavior of those external dependencies.
-
-### Key Concepts of Mocking Library API:
-
-1. **Simulating External Dependencies**: 
-   - When an application interacts with third-party libraries or APIs, those dependencies can affect the outcome of a test. Mocking allows you to simulate how those external systems respond without actually interacting with them.
-   
-2. **Controlled Test Environment**:
-   - By mocking libraries or APIs, you ensure that your tests run in a controlled environment. You avoid issues like fluctuating network speed, API downtime, rate limits, or inconsistent data, which could make tests unreliable.
-
-3. **Isolation of Code**:
-   - Mocking helps isolate the functionality of the code you are testing. The focus is on testing the logic and flow of your application without relying on real responses from external systems.
-
-4. **Simulating Responses**:
-   - You can specify what data the mocked API or library returns, whether it's a successful response (e.g., HTTP 200) or an error (e.g., HTTP 404). This allows you to test different scenarios and edge cases.
-
-5. **Efficiency**:
-   - Real API calls can be slow or costly. By mocking, you speed up your tests because no actual network requests are made. This helps in running the tests frequently during development or continuous integration.
-
-### Key Elements of the Mocking Library API Section
-
-1. **Axios Mocking**:
-   - **`jest.mock('axios')`** is used to mock the entire Axios library, ensuring that all Axios calls are intercepted and simulated by the mocked version.
-   - **`mockedAxios.get.mockResolvedValue`** is used to simulate the response returned from an API call without making an actual request.
-
-2. **Testing Axios instance creation**:
-   - The test checks whether the Axios instance is created with the correct base URL, which is crucial when dealing with services that require custom configurations.
-   - **`jest.spyOn(axios, 'create')`** is used to spy on the `axios.create` method, allowing the test to verify that it's called with the correct configuration.
-
-3. **Verifying API request URLs**:
-   - The test checks that the correct relative path (e.g., `/posts`) is used in the Axios `get` request.
-   - This ensures that the function interacts with the API as expected, even though the actual request is mocked.
-
-4. **Validating the response data**:
-   - The test confirms that the function returns the data from the mocked Axios response.
-   - **`mockResolvedValue({ data: mockData })`** simulates a successful response from the API with `mockData`, allowing the test to verify that the returned data matches the mock.
-
-### Mocking Library API: Detailed Breakdown of Tests
-
-#### Test 1: Creating an Axios Instance
-This test ensures that the function correctly creates an Axios instance with a provided base URL.
-
-```typescript
-test('should create instance with provided base url', async () => {
-  const baseUrl = 'https://jsonplaceholder.typicode.com';
-  
-  // Simulate resolved response
-  mockedAxios.get.mockResolvedValue({ data: {} });
-  
-  // Spy on axios.create
-  jest.spyOn(axios, 'create').mockReturnValue(mockedAxios);
-  
-  // Execute the function
-  await throttledGetDataFromApi('/posts');
-  
-  // Assert that axios.create was called with the correct base URL
-  expect(axios.create).toHaveBeenCalledWith({ baseURL: baseUrl });
-});
-```
-
-#### Test 2: Performing API Requests with Correct URL
-This test ensures that the function makes a request to the correct relative path when calling the API.
-
-```typescript
-test('should perform request to correct provided url', async () => {
-  const relativePath = '/posts';
-  
-  // Simulate resolved response
-  mockedAxios.get.mockResolvedValue({ data: {} });
-  
-  // Spy on axios.create
-  jest.spyOn(axios, 'create').mockReturnValue(mockedAxios);
-  
-  // Execute the function
-  await throttledGetDataFromApi(relativePath);
-  
-  // Assert that axios.get was called with the correct URL
-  expect(mockedAxios.get).toHaveBeenCalledWith(relativePath);
-});
-```
-
-#### Test 3: Returning Response Data
-This test validates that the function returns the correct response data from the mocked API request.
-
-```typescript
-test('should return response data', async () => {
-  const mockData = { id: 1, title: 'Test Post' };
-  
-  // Simulate resolved response with mock data
-  mockedAxios.get.mockResolvedValue({ data: mockData });
-  
-  // Spy on axios.create
-  jest.spyOn(axios, 'create').mockReturnValue(mockedAxios);
-  
-  const relativePath = '/posts/1';
-  
-  // Execute the function
-  const result = await throttledGetDataFromApi(relativePath);
-  
-  // Assert that the returned data matches the mock data
-  expect(result).toEqual(mockData);
-});
-```
-
-### Mocking Explanation
-In each test, the Axios request is mocked to simulate different responses:
-- **Mocking resolved responses** ensures the function behaves as if a real API call has succeeded and returned the expected data.
-- **`jest.spyOn` and `mockResolvedValue`** are used to track how Axios methods are called and simulate the data they return, allowing tests to focus purely on function logic without external dependencies.
-
-### Why Mocking Library API is Important
-- **Deterministic tests**: Mocking ensures that your tests are not affected by network issues, rate limits, or changes to the external APIs.
-- **Performance**: Mocking eliminates the need to wait for real network requests to complete, making tests faster and more efficient.
-- **Isolated testing**: You can focus on testing the logic within your application without worrying about how the external service behaves.
-
-### Learn More:
-- [Mocking Modules in Jest](https://jestjs.io/docs/mock-functions#mocking-modules)
-- [Mocking axios in Jest tests with Typescript](https://www.csrhymes.com/2022/03/09/mocking-axios-with-jest-and-typescript.html)
-
---- 
-   
-## Snapshot Testing
-
-In this section, we use Jest's snapshot testing to ensure the consistency of output over time. Tests are written in `src/08-snapshot-testing/index.test.ts`.
-
-### What is Snapshot Testing?
-
-Snapshot testing is a very useful tool to ensure that your code (whether UI components or other functions) remains consistent over time.
-
-Snapshot tests capture the output of a function or component at a given point in time. The output is stored in a "snapshot file" and compared to future test runs. If the output changes unexpectedly, the test will fail. This can be useful for ensuring that refactoring, bug fixes, or other changes don't unintentionally alter the output.
-
-For example, you can use snapshot testing to verify that a function generating a linked list returns the expected structure each time it is called with the same inputs.
-
-### Snapshot Testing Example with Jest
-
-In this example, we'll show how to use Jest's snapshot testing with a function that generates a linked list from an array of values.
-
-#### Step-by-Step Guide:
-
-1. **Function to Test:**
-
-   The `generateLinkedList` function takes an array of elements and returns a linked list. For instance, given `[1, 2, 3]`, it generates the following structure:
-
-   ```javascript
-   {
-     value: 1,
-     next: {
-       value: 2,
-       next: {
-         value: 3,
-         next: null
-       }
-     }
-   }
-   ```
-
-2. **Writing the Snapshot Test:**
-
-   Here's how you can use Jest's `toMatchSnapshot()` to ensure that the generated linked list remains consistent across multiple test runs.
-
-   ```typescript
-   import { generateLinkedList } from './index';
-
-   describe('generateLinkedList', () => {
-     // Check match by expect(...).toStrictEqual(...)
-     test('should generate linked list from values 1', () => {
-       const result = generateLinkedList([1]);
-       const expected = {
-         value: 1,
-         next: {
-           value: null,
-           next: null,
-         }
-       };
-       expect(result).toStrictEqual(expected);  // Strict comparison for the first test
-     });
-
-     // Check match by comparison with snapshot
-     test('should generate linked list from values 2', () => {
-       const result = generateLinkedList([1, 2, 3]);
-       expect(result).toMatchSnapshot();  // Snapshot comparison for the second test
-     });
-   });
-   ```
-
-3. **Running the Tests:**
-
-   To run the tests and generate snapshots, run the following command:
-
-   ```bash
-   jest
-   ```
-
-   This will create a snapshot file in the `__snapshots__` directory next to the test file. For the linked list example, Jest will create a snapshot that looks like this:
-
-   ```js
-   // Jest Snapshot v1, https://goo.gl/fbAQLP
-   exports[`should generate linked list from values 2`] = {
-     "value": 1,
-     "next": {
-       "value": 2,
-       "next": {
-         "value": 3,
-         "next": null
-       }
-     }
-   };
-   ```
-
-4. **Updating Snapshots:**
-
-   If you intentionally change the linked list structure and want to update the snapshot, run:
-
-   ```bash
-   jest --updateSnapshot
-   ```
-
-   Jest will update the stored snapshots with the new structure.
-
-### Benefits of Snapshot Testing
-
-- **Catch unintended changes:** Snapshot tests help catch unintended changes in the output of a function or component.
-- **Easy to set up:** With Jest, snapshot testing is simple and requires minimal setup.
-- **Human-readable output:** The output of the snapshot is often easy to read and understand, even for complex data structures.
+   Tests are written in `src/08-snapshot-testing/index.test.ts`.
 
 
-### Learn More:
-- [Jest - Snapshot Testing](https://jestjs.io/docs/snapshot-testing)
-- [React Snapshot Testing](https://reactjs.org/docs/test-renderer.html#snapshot-testing)
 
----
+## Notes
 
+- Ensure that your tests complete execution within **30 seconds**.
+- The project uses **Jest** as the testing framework. Refer to the [Jest documentation](https://jestjs.io/docs/getting-started) for more information on how to use Jest.
 
-## Authors
-
-Marcia Merritt 
-
-[![LinkedIn][Linkedin]][linkedin-url]
-
-## Version History
-
-* 0.1
-    * Initial Release 18/10/2024
 
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ---
-
-<!--Markdown Links and Images -->
-[Node.js Badge]: https://img.shields.io/badge/Node.js-393?logo=nodedotjs&logoColor=fff&style=flat
-[Node JS]:https://img.shields.io/badge/Node.js-43853D?style=for-the-badge&logo=node.js&logoColor=white
-[NodeJS-url]: https://nodejs.org/en/download
-[tested with jest]: https://img.shields.io/badge/tested_with-jest-99424f.svg?logo=jest
-[jest-url]:(https://github.com/jestjs/jest)
-[jest tested]: https://img.shields.io/badge/Jest-tested-eee.svg?logo=jest&labelColor=99424f
-[jest]:https://jestjs.io/img/jest-badge.svg
-[NPM]: https://img.shields.io/badge/NPM-%23CB3837.svg?style=for-the-badge&logo=npm&logoColor=white
-[NPM-url]: https://www.npmjs.com/
