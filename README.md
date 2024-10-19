@@ -603,16 +603,16 @@ In this example, we'll show how to use Jest's snapshot testing with a function t
 
 ---
 
+## Acknowledgements
+This project is part of the RS School NodeJS 2024 Q3 course, which focuses on building scalable NodeJS applications and implementing efficient testing techniques. Special thanks to the course mentors and contributors for their guidance.
+
+
 ## Authors
 
 Marcia Merritt 
 
 [![LinkedIn][Linkedin]][linkedin-url]
 
-```md
-## Acknowledgements
-
-This project is part of the RS School NodeJS 2024 Q3 course, which focuses on building scalable NodeJS applications and implementing efficient testing techniques. Special thanks to the course mentors and contributors for their guidance.
 
 ## Version History
 
