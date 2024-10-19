@@ -16,15 +16,21 @@ The project is divided into several sections, each focusing on a different testi
 - Mocking Library API
 - Snapshot Testing
 
+## Context
+
+This project was completed as part of the NodeJS 2024 Q3 course at RS School. The goal of this week's assignment was to implement and test custom error handling, asynchronous testing, and snapshot testing using Jest. Each test case ensures the reliability and correctness of the code. 
+
 ## Prerequisites
 
 To run and test the code, ensure you have the following installed on your machine:
 
-[![Node JS][Node.JS Badge]][NodeJS-url]
-[![NPM][npm]][NPM-url]
+![NPM](https://img.shields.io/badge/NPM-%23CB3837.svg?style=for-the-badge&logo=npm&logoColor=white)
+![Node.js](https://img.shields.io/badge/Node.js-43853D?style=for-the-badge&logo=node.js&logoColor=white)
 ![TypeScript](https://img.shields.io/badge/typescript-%23007ACC.svg?style=for-the-badge&logo=typescript&logoColor=white)
 ![JavaScript](https://img.shields.io/badge/javascript-%23323330.svg?style=for-the-badge&logo=javascript&logoColor=%23F7DF1E)
-[![jest tested][jest tested]][Jest-url]
+![Jest Tested](https://img.shields.io/badge/Jest-tested-eee.svg?logo=jest&labelColor=99424f)
+![NPM Version](https://img.shields.io/npm/v/npm.svg)
+[![Made with Node.js](https://img.shields.io/badge/Node.js->=20-blue?logo=node.js&logoColor=white)](https://nodejs.org "Go to Node.js homepage")
 
 - **Node.js v20.x.x LTS** or higher
 
@@ -603,6 +609,11 @@ Marcia Merritt
 
 [![LinkedIn][Linkedin]][linkedin-url]
 
+```md
+## Acknowledgements
+
+This project is part of the RS School NodeJS 2024 Q3 course, which focuses on building scalable NodeJS applications and implementing efficient testing techniques. Special thanks to the course mentors and contributors for their guidance.
+
 ## Version History
 
 * 0.1
@@ -624,3 +635,5 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 [jest]:https://jestjs.io/img/jest-badge.svg
 [NPM]: https://img.shields.io/badge/NPM-%23CB3837.svg?style=for-the-badge&logo=npm&logoColor=white
 [NPM-url]: https://www.npmjs.com/
+[Linkedin]: https://img.shields.io/badge/linkedin-%230077B5.svg?style=for-the-badge&logo=linkedin&logoColor=white
+[linkedin-url]: https://www.linkedin.com/in/marcia-merritt-58662761/
