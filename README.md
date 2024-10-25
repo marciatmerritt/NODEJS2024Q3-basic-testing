@@ -2,6 +2,23 @@
 
 This repository contains unit tests for a Node.js project, focusing on different testing techniques and tools such as Jest. The purpose of the assignment is to demonstrate proficiency in writing tests for various scenarios like simple unit tests, table-driven tests, error handling, class testing, partial mocking, Node.js API mocking, and more.
 
+## Table of Contents
+- [Project Overview](#project-overview)
+- [Testing Asynchronous Code](#testing-asynchronous-code)
+  - [Testing Callbacks](#testing-callbacks)
+  - [Testing Promises](#testing-promises)
+  - [Testing Async/Await](#testing-asyncawait)
+- [Custom Errors](#custom-errors)
+  - [Custom Error Functions](#custom-error-functions)
+  - [Snapshot Cleanup](#snapshot-cleanup)
+- [Testing Classes](#testing-classes)
+  - [Class Structure](#class-structure)
+  - [Testing Methods](#testing-methods)
+- [Acknowledgements](#acknowledgements)
+- [Authors](#authors)
+- [Version History](#version-history)
+- [License](#license)
+
 ## Project Overview
 
 The goal of this assignment is to write comprehensive unit tests for code provided in the repository using **Jest**. This includes testing functions, handling errors, mocking APIs, and creating snapshot tests.
@@ -60,6 +77,8 @@ Follow these steps to set up the project locally:
    npm install
    ```
 
+[Back to Top](#table-of-contents)
+
 ## Running the Tests
 
 This project includes a number of test scripts to verify the code. The tests are written using the **Jest** testing framework.
@@ -78,7 +97,9 @@ npm run test:verbose
 
 After running the tests, you will see the number of passing, failing, and skipped tests in the terminal. All tests should complete execution within **30 seconds**.
 
-## Testing Sections
+[Back to Top](#table-of-contents)
+
+# Testing Sections
 
 ## Simple Tests
 
@@ -103,6 +124,7 @@ This test checks if adding 5 and 3 using the `simpleCalculator` function returns
 - [What is Unit Testing?](https://martinfowler.com/bliki/UnitTest.html) - By Martin Fowler
 
 ---
+[Back to Top](#table-of-contents)
 
 ## Table Tests
 
@@ -143,6 +165,7 @@ For more information on table-driven testing in Jest, you can refer to the follo
 - [Table-Driven Tests in JavaScript](https://dmitripavlutin.com/table-driven-tests-javascript/): A blog post explaining the concept of table-driven testing in JavaScript.
 
 ---
+[Back to Top](#table-of-contents)
 
 
 
@@ -235,6 +258,8 @@ Error handling tests ensure that the code properly throws or rejects errors unde
 - [Error Handling in JavaScript](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Control_flow_and_error_handling)
 
 ---
+[Back to Top](#table-of-contents)
+
 
 ## Testing Classes
 
@@ -258,6 +283,8 @@ test('should create a new bank account with initial balance', () => {
 - [Unit Testing for Classes](https://www.toptal.com/nodejs/node-js-unit-testing-tutorial)
 
 ---
+[Back to Top](#table-of-contents)
+
 
 ## Partial Mocking
 
@@ -365,6 +392,8 @@ describe('processFile', () => {
 - [Mocking Node.js APIs](https://www.digitalocean.com/community/tutorials/js-mock-node-api)
 
 ---
+[Back to Top](#table-of-contents)
+
 
 ## Mocking Library API
 
@@ -492,6 +521,8 @@ In each test, the Axios request is mocked to simulate different responses:
 
 --- 
    
+[Back to Top](#table-of-contents)
+
 ## Snapshot Testing
 
 In this section, we use Jest's snapshot testing to ensure the consistency of output over time. Tests are written in `src/08-snapshot-testing/index.test.ts`.
@@ -602,6 +633,8 @@ In this example, we'll show how to use Jest's snapshot testing with a function t
 - [React Snapshot Testing](https://reactjs.org/docs/test-renderer.html#snapshot-testing)
 
 ---
+[Back to Top](#table-of-contents)
+
 
 ## Acknowledgements
 This project is part of the RS School NodeJS 2024 Q3 course, which focuses on building scalable NodeJS applications and implementing efficient testing techniques. Special thanks to the course mentors and contributors for their guidance.
